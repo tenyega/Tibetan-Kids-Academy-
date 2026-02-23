@@ -6,4 +6,4 @@ export interface TibetanCharacter {
   category: 'consonant' | 'vowel';
 }
 
-export type AppState = 'home' | 'alphabet' | 'vocabulary' | 'quiz';
+export type AppState = 'landing' | 'home' | 'alphabet' | 'vocabulary' | 'quiz';

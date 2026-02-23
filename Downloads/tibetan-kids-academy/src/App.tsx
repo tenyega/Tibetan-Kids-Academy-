@@ -13,7 +13,10 @@ import {
   ChevronLeft, 
   Star,
   Trophy,
-  GraduationCap
+  GraduationCap,
+  ArrowRight,
+  Sparkles,
+  Heart
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -26,8 +29,10 @@ function cn(...inputs: ClassValue[]) {
 }
 
 export default function App() {
-  const [view, setView] = useState<AppState>('home');
+  const [view, setView] = useState<AppState>('landing');
   const [selectedChar, setSelectedChar] = useState<TibetanCharacter | null>(null);
+
+  const isLanding = view === 'landing';
 
   return (
     <div className="min-h-screen bg-[#FDFCF0] text-[#4A4A4A] font-sans selection:bg-orange-100">
@@ -38,28 +43,31 @@ export default function App() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 border-8 border-green-400 rounded-full" />
       </div>
 
-      <div className="relative z-10 max-w-lg mx-auto min-h-screen flex flex-col">
-        {/* Header */}
-        <header className="p-6 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-orange-200">
-              <GraduationCap size={24} />
+      <div className={cn("relative z-10 mx-auto min-h-screen flex flex-col", isLanding ? "max-w-none" : "max-w-lg")}>
+        {/* Header - Hidden on Landing */}
+        {!isLanding && (
+          <header className="p-6 flex items-center justify-between">
+            <div className="flex items-center gap-2">
+              <div className="w-10 h-10 bg-orange-500 rounded-xl flex items-center justify-center text-white shadow-lg shadow-orange-200">
+                <GraduationCap size={24} />
+              </div>
+              <h1 className="text-xl font-bold tracking-tight text-orange-900">Tibetan Kids</h1>
             </div>
-            <h1 className="text-xl font-bold tracking-tight text-orange-900">Tibetan Kids</h1>
-          </div>
-          {view !== 'home' && (
-            <button 
-              onClick={() => setView('home')}
-              className="p-2 hover:bg-black/5 rounded-full transition-colors"
-            >
-              <Home size={24} />
-            </button>
-          )}
-        </header>
+            {view !== 'home' && (
+              <button 
+                onClick={() => setView('home')}
+                className="p-2 hover:bg-black/5 rounded-full transition-colors"
+              >
+                <Home size={24} />
+              </button>
+            )}
+          </header>
+        )}
 
         {/* Main Content */}
-        <main className="flex-1 px-6 pb-24">
+        <main className={cn("flex-1", isLanding ? "" : "px-6 pb-24")}>
           <AnimatePresence mode="wait">
+            {view === 'landing' && <LandingView onStart={() => setView('home')} />}
             {view === 'home' && <HomeView onStart={() => setView('alphabet')} onQuiz={() => setView('quiz')} />}
             {view === 'alphabet' && (
               <AlphabetView 
@@ -81,28 +89,164 @@ export default function App() {
           )}
         </AnimatePresence>
 
-        {/* Bottom Navigation */}
-        <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-md bg-white/80 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-2 flex items-center justify-around">
-          <NavButton 
-            active={view === 'home'} 
-            onClick={() => setView('home')} 
-            icon={<Home size={20} />} 
-            label="Home" 
-          />
-          <NavButton 
-            active={view === 'alphabet'} 
-            onClick={() => setView('alphabet')} 
-            icon={<BookOpen size={20} />} 
-            label="Learn" 
-          />
-          <NavButton 
-            active={view === 'quiz'} 
-            onClick={() => setView('quiz')} 
-            icon={<Gamepad2 size={20} />} 
-            label="Play" 
-          />
-        </nav>
+        {/* Bottom Navigation - Hidden on Landing */}
+        {!isLanding && (
+          <nav className="fixed bottom-6 left-1/2 -translate-x-1/2 w-[calc(100%-3rem)] max-w-md bg-white/80 backdrop-blur-xl border border-white/20 shadow-2xl rounded-3xl p-2 flex items-center justify-around">
+            <NavButton 
+              active={view === 'home'} 
+              onClick={() => setView('home')} 
+              icon={<Home size={20} />} 
+              label="Home" 
+            />
+            <NavButton 
+              active={view === 'alphabet'} 
+              onClick={() => setView('alphabet')} 
+              icon={<BookOpen size={20} />} 
+              label="Learn" 
+            />
+            <NavButton 
+              active={view === 'quiz'} 
+              onClick={() => setView('quiz')} 
+              icon={<Gamepad2 size={20} />} 
+              label="Play" 
+            />
+          </nav>
+        )}
       </div>
+    </div>
+  );
+}
+
+function LandingView({ onStart }: { onStart: () => void }) {
+  return (
+    <motion.div 
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+      className="min-h-screen flex flex-col"
+    >
+      {/* Hero Section */}
+      <section className="relative pt-20 pb-16 px-6 overflow-hidden">
+        <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10">
+          <motion.div
+            initial={{ scale: 0.8, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            transition={{ delay: 0.2 }}
+            className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-bold uppercase tracking-wider"
+          >
+            <Sparkles size={16} />
+            <span>Preserving Culture, One Letter at a Time</span>
+          </motion.div>
+          
+          <motion.h1 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.3 }}
+            className="text-5xl md:text-7xl font-black text-orange-900 leading-tight"
+          >
+            Unlock the Magic of <br />
+            <span className="text-orange-500">Tibetan Language</span>
+          </motion.h1>
+          
+          <motion.p 
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.4 }}
+            className="text-lg md:text-xl text-orange-800/60 max-w-2xl mx-auto font-medium"
+          >
+            A playful, interactive academy designed for kids to learn Tibetan from scratch. 
+            Fun games, real pronunciations, and beautiful characters.
+          </motion.p>
+          
+          <motion.div
+            initial={{ y: 20, opacity: 0 }}
+            animate={{ y: 0, opacity: 1 }}
+            transition={{ delay: 0.5 }}
+            className="flex flex-col sm:flex-row items-center justify-center gap-4"
+          >
+            <button 
+              onClick={onStart}
+              className="w-full sm:w-auto px-10 py-5 bg-orange-500 text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-orange-200 hover:bg-orange-600 hover:-translate-y-1 transition-all flex items-center justify-center gap-3 group"
+            >
+              Start Learning Now
+              <ArrowRight className="group-hover:translate-x-1 transition-transform" />
+            </button>
+            <div className="flex -space-x-3">
+              {[1, 2, 3, 4].map((i) => (
+                <div key={i} className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-orange-100">
+                  <img src={`https://picsum.photos/seed/${i + 10}/100/100`} alt="User" referrerPolicy="no-referrer" />
+                </div>
+              ))}
+              <div className="w-10 h-10 rounded-full border-2 border-white bg-orange-500 flex items-center justify-center text-white text-[10px] font-bold">
+                +1k
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Floating Elements */}
+        <motion.div 
+          animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
+          transition={{ duration: 5, repeat: Infinity }}
+          className="absolute top-20 left-[10%] text-6xl opacity-20 hidden md:block"
+        >
+          ཀ
+        </motion.div>
+        <motion.div 
+          animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
+          transition={{ duration: 6, repeat: Infinity }}
+          className="absolute bottom-40 right-[15%] text-6xl opacity-20 hidden md:block"
+        >
+          ཨ
+        </motion.div>
+      </section>
+
+      {/* Features Section */}
+      <section className="bg-white py-20 px-6">
+        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-12">
+          <FeatureCard 
+            icon={<Volume2 className="text-blue-500" />}
+            title="Real Pronunciation"
+            description="Listen to authentic Tibetan sounds for every letter and word."
+            color="bg-blue-50"
+          />
+          <FeatureCard 
+            icon={<Gamepad2 className="text-green-500" />}
+            title="Interactive Games"
+            description="Fun quizzes and challenges that make learning feel like play."
+            color="bg-green-50"
+          />
+          <FeatureCard 
+            icon={<Heart className="text-red-500" />}
+            title="Kid-Friendly"
+            description="Safe, colorful, and easy-to-use interface designed for little hands."
+            color="bg-red-50"
+          />
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="py-12 px-6 text-center border-t border-orange-100">
+        <div className="flex items-center justify-center gap-2 mb-4">
+          <GraduationCap className="text-orange-500" />
+          <span className="font-black text-orange-900">Tibetan Kids Academy</span>
+        </div>
+        <p className="text-orange-800/40 text-sm font-bold uppercase tracking-widest">
+          Made with love for the next generation
+        </p>
+      </footer>
+    </motion.div>
+  );
+}
+
+function FeatureCard({ icon, title, description, color }: { icon: React.ReactElement; title: string; description: string; color: string }) {
+  return (
+    <div className="space-y-4">
+      <div className={cn("w-16 h-16 rounded-2xl flex items-center justify-center shadow-inner", color)}>
+        {React.cloneElement(icon, { size: 32 } as any)}
+      </div>
+      <h3 className="text-2xl font-black text-orange-900">{title}</h3>
+      <p className="text-orange-800/60 font-medium leading-relaxed">{description}</p>
     </div>
   );
 }
