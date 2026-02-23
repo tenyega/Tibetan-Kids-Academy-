@@ -1,0 +1,5 @@
+{
+  "name": "Tibetan Kids Academy",
+  "description": "A fun and interactive app for kids to learn the Tibetan language from scratch, featuring alphabet, pronunciation, and basic vocabulary.",
+  "requestFramePermissions": ["microphone"]
+}
