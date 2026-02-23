@@ -6,7 +6,7 @@ export async function speakTibetan(text: string, transliteration: string) {
   try {
     const response = await ai.models.generateContent({
       model: "gemini-2.5-flash-preview-tts",
-      contents: [{ parts: [{ text: `Say the Tibetan letter or word: "${text}". It is pronounced as "${transliteration}". Speak clearly for a child learning the language.` }] }],
+      contents: [{ parts: [{ text: `Say: ${transliteration}` }] }],
       config: {
         responseModalities: [Modality.AUDIO],
         speechConfig: {
