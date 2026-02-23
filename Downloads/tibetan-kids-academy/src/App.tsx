@@ -4,7 +4,7 @@
  */
 
 import React, { useState } from 'react';
-import { motion, AnimatePresence } from 'motion/react';
+import { motion, AnimatePresence } from 'framer-motion';
 import { 
   BookOpen, 
   Gamepad2, 
@@ -44,11 +44,20 @@ export default function App() {
   }, []);
 
   const handleInstall = async () => {
-    if (!deferredPrompt) return;
-    deferredPrompt.prompt();
-    const { outcome } = await deferredPrompt.userChoice;
-    if (outcome === 'accepted') {
-      setDeferredPrompt(null);
+    if (deferredPrompt) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'accepted') {
+        setDeferredPrompt(null);
+      }
+    } else {
+      // Fallback for iOS or browsers that don't support the prompt API
+      const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !(window as any).MSStream;
+      if (isIOS) {
+        alert("To install on iOS:\n1. Tap the 'Share' button (square with arrow)\n2. Scroll down and tap 'Add to Home Screen'\n3. Tap 'Add'");
+      } else {
+        alert("To install:\n1. Look for the 'Install' icon in your browser's address bar\n2. Or tap the browser menu (three dots) and select 'Install app' or 'Add to Home screen'");
+      }
     }
   };
 
@@ -90,7 +99,7 @@ export default function App() {
             {view === 'landing' && (
               <LandingView 
                 onStart={() => setView('home')} 
-                onInstall={deferredPrompt ? handleInstall : undefined}
+                onInstall={handleInstall}
               />
             )}
             {view === 'home' && <HomeView onStart={() => setView('alphabet')} onQuiz={() => setView('quiz')} />}
@@ -142,122 +151,80 @@ export default function App() {
   );
 }
 
-function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall?: () => void }) {
+function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: () => void }) {
   return (
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col"
+      className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3]"
     >
-      {/* Hero Section */}
-      <section className="relative pt-20 pb-16 px-6 overflow-hidden">
-        <div className="max-w-4xl mx-auto text-center space-y-8 relative z-10">
-          <motion.div
-            initial={{ scale: 0.8, opacity: 0 }}
-            animate={{ scale: 1, opacity: 1 }}
-            transition={{ delay: 0.2 }}
-            className="inline-flex items-center gap-2 px-4 py-2 bg-orange-100 text-orange-700 rounded-full text-sm font-bold uppercase tracking-wider"
-          >
-            <Sparkles size={16} />
-            <span>Preserving Culture, One Letter at a Time</span>
-          </motion.div>
-          
-          <motion.h1 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.3 }}
-            className="text-5xl md:text-7xl font-black text-orange-900 leading-tight"
-          >
-            Unlock the Magic of <br />
-            <span className="text-orange-500">Tibetan Language</span>
-          </motion.h1>
-          
-          <motion.p 
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.4 }}
-            className="text-lg md:text-xl text-orange-800/60 max-w-2xl mx-auto font-medium"
-          >
-            A playful, interactive academy designed for kids to learn Tibetan from scratch. 
-            Fun games, real pronunciations, and beautiful characters.
-          </motion.p>
-          
-          <motion.div
-            initial={{ y: 20, opacity: 0 }}
-            animate={{ y: 0, opacity: 1 }}
-            transition={{ delay: 0.5 }}
-            className="flex flex-col sm:flex-row items-center justify-center gap-4"
-          >
-            <button 
-              onClick={onStart}
-              className="w-full sm:w-auto px-10 py-5 bg-orange-500 text-white rounded-[2rem] font-black text-xl shadow-2xl shadow-orange-200 hover:bg-orange-600 hover:-translate-y-1 transition-all flex items-center justify-center gap-3 group"
-            >
-              Start Learning Now
-              <ArrowRight className="group-hover:translate-x-1 transition-transform" />
-            </button>
-            
-            <button 
-              onClick={onInstall || (() => alert("To install: Tap the browser menu (three dots) and select 'Add to Home screen' or 'Install app'"))}
-              className="w-full sm:w-auto px-10 py-5 bg-white text-orange-600 border-2 border-orange-100 rounded-[2rem] font-black text-xl shadow-xl hover:bg-orange-50 hover:border-orange-200 hover:-translate-y-1 transition-all flex items-center justify-center gap-3 group"
-            >
-              Install App
-              <Download className="group-hover:bounce transition-transform" />
-            </button>
-          </motion.div>
-        </div>
-
-        {/* Floating Elements */}
-        <motion.div 
-          animate={{ y: [0, -20, 0], rotate: [0, 5, 0] }}
-          transition={{ duration: 5, repeat: Infinity }}
-          className="absolute top-20 left-[10%] text-6xl opacity-20 hidden md:block"
+      <div className="max-w-2xl w-full space-y-8">
+        <motion.div
+          initial={{ y: -20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          className="flex justify-center"
         >
-          ཀ
+          <div className="w-32 h-32 bg-orange-500 rounded-3xl flex items-center justify-center text-white shadow-2xl shadow-orange-200">
+            <GraduationCap size={64} />
+          </div>
         </motion.div>
-        <motion.div 
-          animate={{ y: [0, 20, 0], rotate: [0, -5, 0] }}
-          transition={{ duration: 6, repeat: Infinity }}
-          className="absolute bottom-40 right-[15%] text-6xl opacity-20 hidden md:block"
+
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.1 }}
+          className="space-y-4"
         >
-          ཨ
+          <h1 className="text-4xl md:text-5xl font-black text-orange-900 leading-tight">
+            🎓 Tibetan Kids Academy – Download the App
+          </h1>
+          
+          <p className="text-lg text-orange-800/70 font-medium">
+            This project was designed to preserve Tibetan culture and language for the next generation, 
+            providing a playful and interactive way for kids to learn.
+          </p>
+
+          <p className="text-lg text-orange-800/70 font-medium">
+            Learn the alphabet with real pronunciations, interactive games, 
+            and beautiful characters designed for young learners.
+          </p>
         </motion.div>
-      </section>
 
-      {/* Features Section */}
-      <section className="bg-white py-20 px-6">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-12">
-          <FeatureCard 
-            icon={<Volume2 className="text-blue-500" />}
-            title="Real Pronunciation"
-            description="Listen to authentic Tibetan sounds for every letter and word."
-            color="bg-blue-50"
-          />
-          <FeatureCard 
-            icon={<Gamepad2 className="text-green-500" />}
-            title="Interactive Games"
-            description="Fun quizzes and challenges that make learning feel like play."
-            color="bg-green-50"
-          />
-          <FeatureCard 
-            icon={<Heart className="text-red-500" />}
-            title="Kid-Friendly"
-            description="Safe, colorful, and easy-to-use interface designed for little hands."
-            color="bg-red-50"
-          />
-        </div>
-      </section>
+        <motion.div
+          initial={{ y: 20, opacity: 0 }}
+          animate={{ y: 0, opacity: 1 }}
+          transition={{ delay: 0.2 }}
+          className="flex flex-col items-center gap-6 pt-4"
+        >
+          <button 
+            onClick={onInstall}
+            className="w-full sm:w-auto px-12 py-5 bg-[#28a745] text-white rounded-xl font-bold text-xl shadow-lg hover:bg-[#218838] transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3"
+          >
+            📲 Install the App
+          </button>
 
-      {/* Footer */}
-      <footer className="py-12 px-6 text-center border-t border-orange-100">
-        <div className="flex items-center justify-center gap-2 mb-4">
-          <GraduationCap className="text-orange-500" />
-          <span className="font-black text-orange-900">Tibetan Kids Academy</span>
-        </div>
-        <p className="text-orange-800/40 text-sm font-bold uppercase tracking-widest">
-          Made with love for the next generation
-        </p>
-      </footer>
+          <button 
+            onClick={onStart}
+            className="text-orange-600 font-bold hover:underline transition-all"
+          >
+            Or continue to the Web Version →
+          </button>
+        </motion.div>
+
+        <motion.div
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.3 }}
+          className="pt-8 space-y-4"
+        >
+          <div className="text-sm text-orange-800/50 font-medium bg-white/50 p-6 rounded-2xl border border-orange-100">
+            ⚠️ <b>Installation Note:</b> For the best experience on Android, select <b>"Install app"</b> or <b>"Add to Home screen"</b> when prompted. 
+            On iOS, tap the <b>Share</b> button and select <b>"Add to Home Screen"</b>.<br />
+            📧 Need help? Contact us at <a href="mailto:support@tibetan-kids.edu" className="text-orange-600 hover:underline">support@tibetan-kids.edu</a>
+          </div>
+        </motion.div>
+      </div>
     </motion.div>
   );
 }
