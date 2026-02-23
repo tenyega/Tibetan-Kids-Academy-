@@ -16,7 +16,8 @@ import {
   GraduationCap,
   ArrowRight,
   Sparkles,
-  Heart
+  Heart,
+  Download
 } from 'lucide-react';
 import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -31,6 +32,25 @@ function cn(...inputs: ClassValue[]) {
 export default function App() {
   const [view, setView] = useState<AppState>('landing');
   const [selectedChar, setSelectedChar] = useState<TibetanCharacter | null>(null);
+  const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
+
+  React.useEffect(() => {
+    const handler = (e: any) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+    window.addEventListener('beforeinstallprompt', handler);
+    return () => window.removeEventListener('beforeinstallprompt', handler);
+  }, []);
+
+  const handleInstall = async () => {
+    if (!deferredPrompt) return;
+    deferredPrompt.prompt();
+    const { outcome } = await deferredPrompt.userChoice;
+    if (outcome === 'accepted') {
+      setDeferredPrompt(null);
+    }
+  };
 
   const isLanding = view === 'landing';
 
@@ -67,7 +87,12 @@ export default function App() {
         {/* Main Content */}
         <main className={cn("flex-1", isLanding ? "" : "px-6 pb-24")}>
           <AnimatePresence mode="wait">
-            {view === 'landing' && <LandingView onStart={() => setView('home')} />}
+            {view === 'landing' && (
+              <LandingView 
+                onStart={() => setView('home')} 
+                onInstall={deferredPrompt ? handleInstall : undefined}
+              />
+            )}
             {view === 'home' && <HomeView onStart={() => setView('alphabet')} onQuiz={() => setView('quiz')} />}
             {view === 'alphabet' && (
               <AlphabetView 
@@ -117,7 +142,7 @@ export default function App() {
   );
 }
 
-function LandingView({ onStart }: { onStart: () => void }) {
+function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall?: () => void }) {
   return (
     <motion.div 
       initial={{ opacity: 0 }}
@@ -171,16 +196,14 @@ function LandingView({ onStart }: { onStart: () => void }) {
               Start Learning Now
               <ArrowRight className="group-hover:translate-x-1 transition-transform" />
             </button>
-            <div className="flex -space-x-3">
-              {[1, 2, 3, 4].map((i) => (
-                <div key={i} className="w-10 h-10 rounded-full border-2 border-white overflow-hidden bg-orange-100">
-                  <img src={`https://picsum.photos/seed/${i + 10}/100/100`} alt="User" referrerPolicy="no-referrer" />
-                </div>
-              ))}
-              <div className="w-10 h-10 rounded-full border-2 border-white bg-orange-500 flex items-center justify-center text-white text-[10px] font-bold">
-                +1k
-              </div>
-            </div>
+            
+            <button 
+              onClick={onInstall || (() => alert("To install: Tap the browser menu (three dots) and select 'Add to Home screen' or 'Install app'"))}
+              className="w-full sm:w-auto px-10 py-5 bg-white text-orange-600 border-2 border-orange-100 rounded-[2rem] font-black text-xl shadow-xl hover:bg-orange-50 hover:border-orange-200 hover:-translate-y-1 transition-all flex items-center justify-center gap-3 group"
+            >
+              Install App
+              <Download className="group-hover:bounce transition-transform" />
+            </button>
           </motion.div>
         </div>
 
