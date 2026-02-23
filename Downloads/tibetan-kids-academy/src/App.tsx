@@ -218,11 +218,20 @@ function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: (
           transition={{ delay: 0.3 }}
           className="pt-8 space-y-4"
         >
-          <div className="text-sm text-orange-800/50 font-medium bg-white/50 p-6 rounded-2xl border border-orange-100">
-            ⚠️ <b>Installation Note:</b> For the best experience on Android, select <b>"Install app"</b> or <b>"Add to Home screen"</b> when prompted. 
-            On iOS, tap the <b>Share</b> button and select <b>"Add to Home Screen"</b>.<br />
-            📧 Need help? Contact us at <a href="mailto:support@tibetan-kids.edu" className="text-orange-600 hover:underline">support@tibetan-kids.edu</a>
-          </div>
+         <div className="text-sm text-orange-800/50 font-medium bg-white/50 p-6 rounded-2xl border border-orange-100">
+  <div className="mb-4">
+    ⚠️ <b>Installation Note:</b> For the best experience on Android, select <b>"Install app"</b> or <b>"Add to Home screen"</b> when prompted. 
+    On iOS, tap the <b>Share</b> button and select <b>"Add to Home Screen"</b>.
+  </div>
+  
+  <div className="flex flex-col md:flex-row justify-between items-center gap-4 pt-4 border-t border-orange-100/50">
+    <p>© {new Date().getFullYear()} Your Name. All rights reserved.<br></br> Developed with ❤️ for Tibetan Kids by<br></br> Tenzin Yega(Mundgod)</p>
+    
+    <p>
+      📧 Need help? Contact us at <a href="mailto:tenyega23@gmail.com" className="text-orange-600 hover:underline">tenyega23@gmail.com</a>
+    </p>
+  </div>
+</div>
         </motion.div>
       </div>
     </motion.div>
