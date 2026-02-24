@@ -1,3 +1,22 @@
+/**
+ * Unlocks audio on iOS/Safari by playing a silent sound on user interaction.
+ */
+export function unlockAudio() {
+  if ('speechSynthesis' in window) {
+    // Warm up speech synthesis
+    const utterance = new SpeechSynthesisUtterance('');
+    utterance.volume = 0;
+    window.speechSynthesis.speak(utterance);
+  }
+
+  // Warm up HTML5 Audio
+  const audio = new Audio();
+  audio.play().catch(() => {
+    // This will likely fail if not called directly from a click, 
+    // but the attempt helps "prime" the audio context.
+  });
+}
+
 export async function speakTibetan(text: string, transliteration: string, localPath?: string) {
   // Stop any current speech synthesis to avoid overlapping
   if (window.speechSynthesis) {
@@ -8,10 +27,9 @@ export async function speakTibetan(text: string, transliteration: string, localP
   if (localPath) {
     const audio = new Audio();
     audio.src = localPath;
-    audio.load(); // Explicitly load the audio
+    audio.load();
     
     try {
-      // On iOS, we must call .play() as directly as possible
       await audio.play();
       return;
     } catch (localError) {
@@ -23,10 +41,17 @@ export async function speakTibetan(text: string, transliteration: string, localP
   if ('speechSynthesis' in window) {
     const utterance = new SpeechSynthesisUtterance(text);
     
-    // Try to find a Tibetan voice, otherwise it uses system default
-    utterance.lang = 'bo-CN'; // More specific Tibetan code
-    utterance.rate = 0.7;     // Slightly slower for children
-    utterance.pitch = 1.1;    // Slightly higher for a "kid-friendly" tone
+    // On some browsers, voices are loaded asynchronously
+    const voices = window.speechSynthesis.getVoices();
+    const tibetanVoice = voices.find(v => v.lang.toLowerCase().includes('bo'));
+    
+    if (tibetanVoice) {
+      utterance.voice = tibetanVoice;
+    }
+    
+    utterance.lang = 'bo'; 
+    utterance.rate = 0.7;
+    utterance.pitch = 1.1;
     
     window.speechSynthesis.speak(utterance);
   } else {

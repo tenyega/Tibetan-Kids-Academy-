@@ -23,7 +23,7 @@ import { clsx, type ClassValue } from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { TIBETAN_ALPHABET } from './constants';
 import { AppState, TibetanCharacter } from './types';
-import { speakTibetan } from './services/audio';
+import { speakTibetan, unlockAudio } from './services/audio';
 
 function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
@@ -99,8 +99,14 @@ export default function App() {
             {view === 'landing' && (
               <LandingView 
                 key="landing"
-                onStart={() => setView('home')} 
-                onInstall={handleInstall}
+                onStart={() => {
+                  unlockAudio();
+                  setView('home');
+                }} 
+                onInstall={() => {
+                  unlockAudio();
+                  handleInstall();
+                }}
               />
             )}
             {view === 'home' && <HomeView onStart={() => setView('alphabet')} onQuiz={() => setView('quiz')} />}
