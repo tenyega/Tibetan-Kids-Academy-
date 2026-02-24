@@ -98,12 +98,12 @@ export default function App() {
           {view === 'landing' ? (
             <LandingView 
               key="landing"
-              onStart={() => {
-                unlockAudio();
+              onStart={async () => {
+                await unlockAudio();
                 setView('home');
-              }} 
-              onInstall={() => {
-                unlockAudio();
+              }}
+              onInstall={async () => {
+                await unlockAudio();
                 handleInstall();
               }}
             />
