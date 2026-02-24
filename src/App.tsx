@@ -109,14 +109,15 @@ export default function App() {
                 }}
               />
             )}
-            {view === 'home' && <HomeView onStart={() => setView('alphabet')} onQuiz={() => setView('quiz')} />}
+            {view === 'home' && <HomeView key="home" onStart={() => setView('alphabet')} onQuiz={() => setView('quiz')} />}
             {view === 'alphabet' && (
               <AlphabetView 
+                key="alphabet"
                 onBack={() => setView('home')} 
                 onSelect={setSelectedChar} 
               />
             )}
-            {view === 'quiz' && <QuizView onBack={() => setView('home')} />}
+            {view === 'quiz' && <QuizView key="quiz" onBack={() => setView('home')} />}
           </AnimatePresence>
         </main>
 
@@ -161,10 +162,10 @@ export default function App() {
 function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: () => void }) {
   return (
     <motion.div 
-      initial={{ opacity: 1 }}
+      initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-[100dvh] w-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3] relative z-50"
+      className="min-h-screen w-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3] relative z-50"
     >
       <div className="max-w-2xl w-full space-y-8 py-12">
         <motion.div
