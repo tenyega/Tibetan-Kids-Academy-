@@ -462,22 +462,20 @@ function QuizView({ onBack }: { onBack: () => void }) {
 
 function CharacterModal({ char, onClose }: { char: TibetanCharacter; onClose: () => void }) {
   const [isSpeaking, setIsSpeaking] = useState(false);  // ← setIsSpeaking lives here
+const handleSpeak = async () => {
+  unlockAudioOnIOS(); // ← synchronous, runs instantly before any await
+  setIsSpeaking(true);
+  await speakTibetan(char.char, char.transliteration, char.audioPath);
+  setIsSpeaking(false);
+};
 
-  // ✅ handleSpeak goes INSIDE the component, so it has access to char and setIsSpeaking
-  const handleSpeak = async () => {
-    unlockAudioOnIOS();
-    setIsSpeaking(true);
-    await speakTibetan(char.char, char.transliteration, char.audioPath);
-    setIsSpeaking(false);
-  };
-
-  const handleSpeakExample = async () => {
-    if (!char.exampleWord) return;
-    unlockAudioOnIOS();
-    setIsSpeaking(true);
-    await speakTibetan(char.exampleWord, char.exampleMeaning || '', char.exampleAudioPath);
-    setIsSpeaking(false);
-  };
+const handleSpeakExample = async () => {
+  if (!char.exampleWord) return;
+  unlockAudioOnIOS(); // ← here too
+  setIsSpeaking(true);
+  await speakTibetan(char.exampleWord, char.exampleMeaning || '', char.exampleAudioPath);
+  setIsSpeaking(false);
+};
 
   return (
     <div className="fixed inset-0 z-50 flex items-end justify-center p-4">
