@@ -558,6 +558,17 @@ function CharacterModal({ char, onClose }: { char: TibetanCharacter; onClose: ()
             onClick={onClose}
             className="w-full bg-orange-500 text-white p-5 rounded-3xl font-bold text-lg shadow-xl shadow-orange-200 hover:bg-orange-600 transition-colors"
           >
+            <button
+  onClick={() => {
+    const audio = new Audio('/audio/ka.mp3');
+    audio.play()
+      .then(() => alert('✅ Audio playing!'))
+      .catch(err => alert('❌ Error: ' + err.message));
+  }}
+  className="w-full bg-gray-200 text-gray-800 p-3 rounded-2xl font-bold"
+>
+  🔊 Debug: Test ka.mp3
+</button>
             Got it!
           </button>
         </div>
