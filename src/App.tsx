@@ -90,7 +90,7 @@ export default function App() {
   const isLanding = view === 'landing';
 
   return (
-    <div className="min-h-screen bg-[#FDFCF0] text-[#4A4A4A] font-sans selection:bg-orange-100">
+    <div className="min-h-[100dvh] bg-[#FDFCF0] text-[#4A4A4A] font-sans selection:bg-orange-100">
       {/* Background patterns */}
       <div className="fixed inset-0 pointer-events-none opacity-5 overflow-hidden">
         <div className="absolute top-10 left-10 w-64 h-64 border-8 border-orange-400 rounded-full" />
@@ -98,7 +98,7 @@ export default function App() {
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-96 h-96 border-8 border-green-400 rounded-full" />
       </div>
 
-      <div className={cn("relative z-10 mx-auto min-h-screen flex flex-col", isLanding ? "max-w-none" : "max-w-lg")}>
+      <div className={cn("relative z-10 mx-auto min-h-[100dvh] flex flex-col", isLanding ? "max-w-none" : "max-w-lg")}>
         {/* Header - Hidden on Landing */}
         {!isLanding && (
           <header className="p-6 flex items-center justify-between">
@@ -185,7 +185,7 @@ function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: (
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3]"
+      className="min-h-[100dvh] flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3]"
     >
       <div className="max-w-2xl w-full space-y-8">
         <motion.div
@@ -581,17 +581,6 @@ const handleSpeakExample = async () => {
             onClick={onClose}
             className="w-full bg-orange-500 text-white p-5 rounded-3xl font-bold text-lg shadow-xl shadow-orange-200 hover:bg-orange-600 transition-colors"
           >
-         <button
-  onClick={() => {
-    const audio = new Audio('/audio/a.mp3');
-    audio.play()
-      .then(() => alert('✅ Works!'))
-      .catch(err => alert('❌ ' + err.name + ': ' + err.message));
-  }}
->
-  🔊 Debug Test
-</button>
-
             Got it!
           </button>
         </div>
