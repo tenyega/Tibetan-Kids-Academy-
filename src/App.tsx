@@ -98,6 +98,7 @@ export default function App() {
           <AnimatePresence mode="wait">
             {view === 'landing' && (
               <LandingView 
+                key="landing"
                 onStart={() => setView('home')} 
                 onInstall={handleInstall}
               />
@@ -154,7 +155,6 @@ export default function App() {
 function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: () => void }) {
   return (
     <motion.div 
-      initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
       className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3]"
@@ -177,18 +177,20 @@ function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: (
           className="space-y-4"
         >
           <h1 className="text-4xl md:text-5xl font-black text-orange-900 leading-tight">
-            🎓 Tibetan Kids Academy – Download the App
+            🎓 Tibetan Kids Academy
           </h1>
+          <h2 className="text-2xl md:text-3xl font-bold text-orange-800/80 italic">
+            Télécharger l'App / Download the App
+          </h2>
           
-          <p className="text-lg text-orange-800/70 font-medium">
-            This project was designed to preserve Tibetan culture and language for the next generation, 
-            providing a playful and interactive way for kids to learn.
-          </p>
-
-          <p className="text-lg text-orange-800/70 font-medium">
-            Learn the alphabet with real pronunciations, interactive games, 
-            and beautiful characters designed for young learners.
-          </p>
+          <div className="space-y-4 pt-4">
+            <p className="text-lg text-orange-800/70 font-medium">
+              Ce projet a été conçu pour préserver la culture et la langue tibétaines pour la prochaine génération.
+            </p>
+            <p className="text-lg text-orange-800/70 font-medium">
+              This project was designed to preserve Tibetan culture and language for the next generation.
+            </p>
+          </div>
         </motion.div>
 
         <motion.div
@@ -201,14 +203,14 @@ function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: (
             onClick={onInstall}
             className="w-full sm:w-auto px-12 py-5 bg-[#28a745] text-white rounded-xl font-bold text-xl shadow-lg hover:bg-[#218838] transition-all hover:-translate-y-1 active:scale-95 flex items-center justify-center gap-3"
           >
-            📲 Install the App
+            📲 Installer l'App / Install App
           </button>
 
           <button 
             onClick={onStart}
             className="text-orange-600 font-bold hover:underline transition-all"
           >
-            Or continue to the Web Version →
+            Continuer vers la version Web / Continue to Web Version →
           </button>
         </motion.div>
 
@@ -218,10 +220,12 @@ function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: (
           transition={{ delay: 0.3 }}
           className="pt-8 space-y-4"
         >
-          <div className="text-sm text-orange-800/50 font-medium bg-white/50 p-6 rounded-2xl border border-orange-100">
-            ⚠️ <b>Installation Note:</b> For the best experience on Android, select <b>"Install app"</b> or <b>"Add to Home screen"</b> when prompted. 
-            On iOS, tap the <b>Share</b> button and select <b>"Add to Home Screen"</b>.<br />
-            📧 Need help? Contact us at <a href="mailto:support@tibetan-kids.edu" className="text-orange-600 hover:underline">support@tibetan-kids.edu</a>
+          <div className="text-sm text-orange-800/50 font-medium bg-white/50 p-6 rounded-2xl border border-orange-100 text-left">
+            <p className="mb-2">⚠️ <b>Installation:</b></p>
+            <p className="mb-1"><b>Android:</b> Sélectionnez <b>"Installer l'application"</b> ou <b>"Ajouter à l'écran d'accueil"</b>.</p>
+            <p className="mb-1"><b>iOS:</b> Appuyez sur le bouton <b>Partager</b> et sélectionnez <b>"Sur l'écran d'accueil"</b>.</p>
+            <hr className="my-3 border-orange-100" />
+            <p>📧 Need help? <a href="mailto:support@tibetan-kids.edu" className="text-orange-600 hover:underline">support@tibetan-kids.edu</a></p>
           </div>
         </motion.div>
       </div>
