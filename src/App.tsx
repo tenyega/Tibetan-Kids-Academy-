@@ -36,6 +36,31 @@ export default function App() {
   const [deferredPrompt, setDeferredPrompt] = useState<any>(null);
 
   React.useEffect(() => {
+    const unlock = () => {
+      try {
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        const ctx = new AudioContext();
+        const buffer = ctx.createBuffer(1, 1, 22050);
+        const source = ctx.createBufferSource();
+        source.buffer = buffer;
+        source.connect(ctx.destination);
+        source.start(0);
+        ctx.resume().then(() => {
+          console.log('✅ Audio unlocked!');
+        });
+      } catch (e) {
+        console.warn('unlock failed', e);
+      }
+      // Remove listener after first tap
+      document.removeEventListener('touchstart', unlock);
+      document.removeEventListener('click', unlock);
+    };
+
+    document.addEventListener('touchstart', unlock, { once: true });
+    document.addEventListener('click', unlock, { once: true });
+  }, []);
+
+  React.useEffect(() => {
     const handler = (e: any) => {
       e.preventDefault();
       setDeferredPrompt(e);
@@ -556,17 +581,17 @@ const handleSpeakExample = async () => {
             onClick={onClose}
             className="w-full bg-orange-500 text-white p-5 rounded-3xl font-bold text-lg shadow-xl shadow-orange-200 hover:bg-orange-600 transition-colors"
           >
-            <button
+         <button
   onClick={() => {
-    const audio = new Audio('/audio/ka.mp3');
+    const audio = new Audio('/audio/a.mp3');
     audio.play()
-      .then(() => alert('✅ Audio playing!'))
-      .catch(err => alert('❌ Error: ' + err.message));
+      .then(() => alert('✅ Works!'))
+      .catch(err => alert('❌ ' + err.name + ': ' + err.message));
   }}
-  className="w-full bg-gray-200 text-gray-800 p-3 rounded-2xl font-bold"
 >
-  🔊 Debug: Test ka.mp3
+  🔊 Debug Test
 </button>
+
             Got it!
           </button>
         </div>
