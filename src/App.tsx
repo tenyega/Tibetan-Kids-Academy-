@@ -90,7 +90,11 @@ export default function App() {
   const isLanding = view === 'landing';
 
   return (
-    <div className="min-h-[100dvh] bg-[#FDFCF0] text-[#4A4A4A] font-sans selection:bg-orange-100">
+     <div className="min-h-[100dvh] bg-[#FDFCF0] text-[#4A4A4A] font-sans selection:bg-orange-100">
+      {/* TEMPORARY DEBUG */}
+      <div style={{position:'fixed', top:0, left:0, zIndex:9999, background:'red', color:'white', fontSize:'14px', padding:'8px'}}>
+        JS OK - {view}
+      </div>
       {/* Background patterns */}
       <div className="fixed inset-0 pointer-events-none opacity-5 overflow-hidden">
         <div className="absolute top-10 left-10 w-64 h-64 border-8 border-orange-400 rounded-full" />
