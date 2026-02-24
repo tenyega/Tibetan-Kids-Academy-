@@ -155,11 +155,12 @@ export default function App() {
 function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: () => void }) {
   return (
     <motion.div 
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3]"
+      className="min-h-[100dvh] w-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3] relative z-50"
     >
-      <div className="max-w-2xl w-full space-y-8">
+      <div className="max-w-2xl w-full space-y-8 py-12">
         <motion.div
           initial={{ y: -20, opacity: 0 }}
           animate={{ y: 0, opacity: 1 }}
@@ -224,6 +225,8 @@ function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: (
             <p className="mb-2">⚠️ <b>Installation:</b></p>
             <p className="mb-1"><b>Android:</b> Sélectionnez <b>"Installer l'application"</b> ou <b>"Ajouter à l'écran d'accueil"</b>.</p>
             <p className="mb-1"><b>iOS:</b> Appuyez sur le bouton <b>Partager</b> et sélectionnez <b>"Sur l'écran d'accueil"</b>.</p>
+            <hr className="my-3 border-orange-100" />
+            <p className="mb-2">🔊 <b>Audio (iPhone):</b> Assurez-vous que le bouton <b>Silencieux</b> sur le côté de votre iPhone est <b>DÉSACTIVÉ</b>.</p>
             <hr className="my-3 border-orange-100" />
             <p>📧 Need help? <a href="mailto:support@tibetan-kids.edu" className="text-orange-600 hover:underline">support@tibetan-kids.edu</a></p>
           </div>
