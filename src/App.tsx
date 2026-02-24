@@ -94,31 +94,32 @@ export default function App() {
         )}
 
         {/* Main Content */}
-        <main className={cn("flex-1", isLanding ? "" : "px-6 pb-24")}>
-          <AnimatePresence mode="wait">
-            {view === 'landing' && (
-              <LandingView 
-                key="landing"
-                onStart={() => {
-                  unlockAudio();
-                  setView('home');
-                }} 
-                onInstall={() => {
-                  unlockAudio();
-                  handleInstall();
-                }}
-              />
-            )}
-            {view === 'home' && <HomeView key="home" onStart={() => setView('alphabet')} onQuiz={() => setView('quiz')} />}
-            {view === 'alphabet' && (
-              <AlphabetView 
-                key="alphabet"
-                onBack={() => setView('home')} 
-                onSelect={setSelectedChar} 
-              />
-            )}
-            {view === 'quiz' && <QuizView key="quiz" onBack={() => setView('home')} />}
-          </AnimatePresence>
+        <main className={cn("flex-1 flex flex-col", isLanding ? "" : "px-6 pb-24")}>
+          {view === 'landing' ? (
+            <LandingView 
+              key="landing"
+              onStart={() => {
+                unlockAudio();
+                setView('home');
+              }} 
+              onInstall={() => {
+                unlockAudio();
+                handleInstall();
+              }}
+            />
+          ) : (
+            <AnimatePresence mode="wait">
+              {view === 'home' && <HomeView key="home" onStart={() => setView('alphabet')} onQuiz={() => setView('quiz')} />}
+              {view === 'alphabet' && (
+                <AlphabetView 
+                  key="alphabet"
+                  onBack={() => setView('home')} 
+                  onSelect={setSelectedChar} 
+                />
+              )}
+              {view === 'quiz' && <QuizView key="quiz" onBack={() => setView('home')} />}
+            </AnimatePresence>
+          )}
         </main>
 
         {/* Character Detail Modal */}
@@ -162,10 +163,10 @@ export default function App() {
 function LandingView({ onStart, onInstall }: { onStart: () => void; onInstall: () => void }) {
   return (
     <motion.div 
-      initial={{ opacity: 0 }}
+      initial={{ opacity: 1 }}
       animate={{ opacity: 1 }}
       exit={{ opacity: 0 }}
-      className="min-h-screen w-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3] relative z-50"
+      className="flex-1 w-full flex flex-col items-center justify-center p-6 text-center bg-gradient-to-br from-[#fefce8] to-[#fef9c3] relative z-50"
     >
       <div className="max-w-2xl w-full space-y-8 py-12">
         <motion.div
