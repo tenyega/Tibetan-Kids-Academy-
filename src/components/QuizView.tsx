@@ -4,6 +4,7 @@ import { TIBETAN_ALPHABET } from '../constants';
 import { cn } from './Common';
 import { ChevronLeft, Star, Sparkles } from 'lucide-react';
 import confetti from 'canvas-confetti';
+import { speakTibetan, unlockAudioOnIOS } from '../services/audio';
 
 export function QuizView({ onBack }: { onBack: () => void }) {
   const [score, setScore] = useState(0);
@@ -26,12 +27,13 @@ export function QuizView({ onBack }: { onBack: () => void }) {
         return {
           char: q.char,
           correct: q.transliteration,
+          audio: q.audioPath,
           options: options.sort(() => Math.random() - 0.5)
         };
       });
   }, []);
 
-  const handleAnswer = (option: string) => {
+  const handleAnswer = async (option: string) => {
     if (selectedOption) return;
 
     setSelectedOption(option);
@@ -46,6 +48,10 @@ export function QuizView({ onBack }: { onBack: () => void }) {
         origin: { y: 0.6 },
         colors: ['#ff7e33', '#22c55e', '#3b82f6', '#eab308']
       });
+      
+      // Play audio for correct answer
+      unlockAudioOnIOS();
+      await speakTibetan(questions[currentQuestion].char, questions[currentQuestion].correct, questions[currentQuestion].audio);
     }
     
     setTimeout(() => {
