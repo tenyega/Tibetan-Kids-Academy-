@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { TIBETAN_ALPHABET } from '../constants';
 import { cn } from './Common';
-import { ChevronLeft, Star } from 'lucide-react';
+import { ChevronLeft, Star, Sparkles } from 'lucide-react';
+import confetti from 'canvas-confetti';
 
 export function QuizView({ onBack }: { onBack: () => void }) {
   const [score, setScore] = useState(0);
   const [currentQuestion, setCurrentQuestion] = useState(0);
   const [showResult, setShowResult] = useState(false);
+  const [selectedOption, setSelectedOption] = useState<string | null>(null);
+  const [isCorrect, setIsCorrect] = useState<boolean | null>(null);
   
   // Simple quiz logic: Match char to transliteration
   const questions = React.useMemo(() => {
@@ -29,15 +32,31 @@ export function QuizView({ onBack }: { onBack: () => void }) {
   }, []);
 
   const handleAnswer = (option: string) => {
-    if (option === questions[currentQuestion].correct) {
+    if (selectedOption) return;
+
+    setSelectedOption(option);
+    const correct = option === questions[currentQuestion].correct;
+    setIsCorrect(correct);
+
+    if (correct) {
       setScore(s => s + 1);
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ff7e33', '#22c55e', '#3b82f6', '#eab308']
+      });
     }
     
-    if (currentQuestion < questions.length - 1) {
-      setCurrentQuestion(c => c + 1);
-    } else {
-      setShowResult(true);
-    }
+    setTimeout(() => {
+      if (currentQuestion < questions.length - 1) {
+        setCurrentQuestion(c => c + 1);
+        setSelectedOption(null);
+        setIsCorrect(null);
+      } else {
+        setShowResult(true);
+      }
+    }, 1000);
   };
 
   if (showResult) {
@@ -102,14 +121,53 @@ export function QuizView({ onBack }: { onBack: () => void }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1 bg-orange-100 px-3 py-1 rounded-full text-orange-700 font-bold">
+        <motion.div 
+          key={score}
+          initial={{ scale: 1 }}
+          animate={{ scale: [1, 1.5, 1] }}
+          transition={{ duration: 0.3 }}
+          className="flex items-center gap-1 bg-orange-100 px-3 py-1 rounded-full text-orange-700 font-bold"
+        >
           <Star size={16} className="fill-orange-500 text-orange-500" />
           <span>{score}</span>
-        </div>
+        </motion.div>
       </div>
 
-      <div className="bg-white p-12 rounded-[3rem] shadow-xl shadow-orange-100 border border-orange-50 flex items-center justify-center text-8xl font-bold text-orange-900">
+      <motion.div 
+        animate={isCorrect ? { scale: [1, 1.05, 1], rotate: [0, -2, 2, 0] } : {}}
+        className={cn(
+          "bg-white p-12 rounded-[3rem] shadow-xl shadow-orange-100 border border-orange-50 flex items-center justify-center text-8xl font-bold transition-colors duration-300",
+          isCorrect === true ? "text-green-600 border-green-200" : isCorrect === false ? "text-red-600 border-red-200" : "text-orange-900"
+        )}
+      >
         {q.char}
+      </motion.div>
+
+      <div className="h-12 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          {selectedOption && (
+            <motion.div
+              key={isCorrect ? 'correct' : 'wrong'}
+              initial={{ opacity: 0, scale: 0.5, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: -10 }}
+              className={cn(
+                "flex items-center gap-2 font-black text-2xl",
+                isCorrect ? "text-green-500" : "text-red-500"
+              )}
+            >
+              {isCorrect ? (
+                <>
+                  <Sparkles className="animate-pulse" />
+                  <span>Brilliant!</span>
+                  <Sparkles className="animate-pulse" />
+                </>
+              ) : (
+                <span>Oops!</span>
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
 
       <div className="grid grid-cols-2 gap-4">
@@ -117,7 +175,13 @@ export function QuizView({ onBack }: { onBack: () => void }) {
           <button
             key={opt}
             onClick={() => handleAnswer(opt)}
-            className="bg-white p-6 rounded-3xl border-2 border-orange-100 hover:border-orange-500 hover:bg-orange-50 transition-all font-bold text-xl text-orange-900 active:scale-95"
+            disabled={!!selectedOption}
+            className={cn(
+              "p-6 rounded-3xl border-2 transition-all font-bold text-xl active:scale-95",
+              selectedOption === opt 
+                ? (isCorrect ? "bg-green-500 border-green-600 text-white" : "bg-red-500 border-red-600 text-white")
+                : (selectedOption && opt === q.correct ? "bg-green-500 border-green-600 text-white" : "bg-white border-orange-100 text-orange-900 hover:border-orange-500 hover:bg-orange-50")
+            )}
           >
             {opt}
           </button>

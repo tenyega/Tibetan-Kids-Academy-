@@ -1,8 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { motion } from 'motion/react';
+import { motion, AnimatePresence } from 'motion/react';
 import { TIBETAN_ALPHABET } from '../constants';
 import { cn } from './Common';
-import { Trophy, RotateCcw, ChevronLeft, Star } from 'lucide-react';
+import { Trophy, RotateCcw, ChevronLeft, Star, Sparkles } from 'lucide-react';
+import confetti from 'canvas-confetti';
 import { speakTibetan, unlockAudioOnIOS } from '../services/audio';
 
 export function ImageQuizView({ onBack }: { onBack: () => void }) {
@@ -55,6 +56,12 @@ export function ImageQuizView({ onBack }: { onBack: () => void }) {
       setIsCorrect(true);
       setSelectedOption(option);
       setScore(s => s + 1);
+      confetti({
+        particleCount: 150,
+        spread: 100,
+        origin: { y: 0.6 },
+        colors: ['#3b82f6', '#22c55e', '#ff7e33', '#eab308']
+      });
       await playCorrectAudio();
       
       setTimeout(() => {
@@ -160,17 +167,29 @@ export function ImageQuizView({ onBack }: { onBack: () => void }) {
           </div>
         </div>
 
-        <div className="flex items-center gap-1 bg-orange-100 px-3 py-1 rounded-full text-orange-700 font-bold">
+        <motion.div 
+          key={score}
+          initial={{ scale: 1 }}
+          animate={{ scale: [1, 1.5, 1] }}
+          transition={{ duration: 0.3 }}
+          className="flex items-center gap-1 bg-orange-100 px-3 py-1 rounded-full text-orange-700 font-bold"
+        >
           <Star size={16} className="fill-orange-500 text-orange-500" />
           <span>{score}</span>
-        </div>
+        </motion.div>
       </div>
 
       <div className="flex justify-between items-center px-2">
         <span className="text-xs font-bold text-orange-500 uppercase">Attempts: {attempts}/3</span>
       </div>
 
-      <div className="bg-white p-4 rounded-[3rem] shadow-xl shadow-orange-100 border border-orange-50 flex flex-col items-center justify-center overflow-hidden">
+      <motion.div 
+        animate={isCorrect ? { scale: [1, 1.05, 1] } : {}}
+        className={cn(
+          "bg-white p-4 rounded-[3rem] shadow-xl shadow-orange-100 border-4 flex flex-col items-center justify-center overflow-hidden transition-colors duration-300",
+          isCorrect === true ? "border-green-400" : isCorrect === false ? "border-blue-400" : "border-orange-50"
+        )}
+      >
         <div className="w-full aspect-video rounded-[2rem] overflow-hidden bg-orange-50">
           <img 
             src={q.image} 
@@ -179,7 +198,7 @@ export function ImageQuizView({ onBack }: { onBack: () => void }) {
             referrerPolicy="no-referrer"
           />
         </div>
-      </div>
+      </motion.div>
 
       <div className="grid grid-cols-2 gap-4">
         {q.options.map((opt) => {
@@ -207,28 +226,39 @@ export function ImageQuizView({ onBack }: { onBack: () => void }) {
         })}
       </div>
       
-      <div className="h-12 flex items-center justify-center">
-        {selectedOption ? (
-          <motion.div 
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            className="text-center"
-          >
-            <p className="text-xl font-bold text-orange-900">
-              {isCorrect ? "Correct! 🎉" : "Time to learn! 📚"}
-            </p>
-            <p className="text-orange-800/60 font-medium">{q.correct} means "{q.meaning}"</p>
-          </motion.div>
-        ) : attempts > 0 && (
-          <motion.div 
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            className="flex items-center gap-2 text-red-500 font-bold"
-          >
-            <RotateCcw size={16} />
-            <span>Not quite! Try again ({3 - attempts} left)</span>
-          </motion.div>
-        )}
+      <div className="h-16 flex items-center justify-center">
+        <AnimatePresence mode="wait">
+          {selectedOption ? (
+            <motion.div 
+              key="feedback"
+              initial={{ opacity: 0, scale: 0.5, y: 10 }}
+              animate={{ opacity: 1, scale: 1, y: 0 }}
+              exit={{ opacity: 0, scale: 0.5, y: -10 }}
+              className="text-center"
+            >
+              <div className={cn(
+                "flex items-center justify-center gap-2 font-black text-2xl mb-1",
+                isCorrect ? "text-green-500" : "text-blue-500"
+              )}>
+                {isCorrect && <Sparkles className="animate-pulse" />}
+                <span>{isCorrect ? "Brilliant! 🎉" : "Time to learn! 📚"}</span>
+                {isCorrect && <Sparkles className="animate-pulse" />}
+              </div>
+              <p className="text-orange-800/60 font-medium">{q.correct} means "{q.meaning}"</p>
+            </motion.div>
+          ) : attempts > 0 && (
+            <motion.div 
+              key="retry"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              className="flex items-center gap-2 text-red-500 font-bold"
+            >
+              <RotateCcw size={16} />
+              <span>Not quite! Try again ({3 - attempts} left)</span>
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
     </motion.div>
   );
