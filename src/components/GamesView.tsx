@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Gamepad2, Image as ImageIcon, BookOpen } from 'lucide-react';
+import { Gamepad2, Image as ImageIcon, BookOpen, Palette } from 'lucide-react';
 import { cn } from './Common';
 
 interface GameCardProps {
@@ -34,7 +34,15 @@ function GameCard({ title, description, icon, color, onClick }: GameCardProps) {
   );
 }
 
-export function GamesView({ onStartQuiz, onStartImageQuiz }: { onStartQuiz: () => void; onStartImageQuiz: () => void }) {
+export function GamesView({ 
+  onStartQuiz, 
+  onStartImageQuiz,
+  onStartColoring 
+}: { 
+  onStartQuiz: () => void; 
+  onStartImageQuiz: () => void;
+  onStartColoring: () => void;
+}) {
   return (
     <motion.div 
       initial={{ opacity: 0, y: 20 }}
@@ -62,6 +70,14 @@ export function GamesView({ onStartQuiz, onStartImageQuiz }: { onStartQuiz: () =
           icon={<ImageIcon size={32} />}
           color="bg-blue-500 shadow-blue-200"
           onClick={onStartImageQuiz}
+        />
+
+        <GameCard 
+          title="Coloring Fun"
+          description="Color by Tibetan character to reveal the picture"
+          icon={<Palette size={32} />}
+          color="bg-purple-500 shadow-purple-200"
+          onClick={onStartColoring}
         />
       </div>
 
