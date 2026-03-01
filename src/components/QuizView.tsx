@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'motion/react';
 import { TIBETAN_ALPHABET } from '../constants';
 import { cn } from './Common';
+import { ChevronLeft, Star } from 'lucide-react';
 
 export function QuizView({ onBack }: { onBack: () => void }) {
   const [score, setScore] = useState(0);
@@ -64,7 +65,7 @@ export function QuizView({ onBack }: { onBack: () => void }) {
           onClick={onBack}
           className="w-full bg-orange-500 text-white p-5 rounded-3xl font-bold text-lg shadow-xl shadow-orange-200 hover:bg-orange-600 transition-colors"
         >
-          Back to Home
+          Back to Games
         </button>
       </motion.div>
     );
@@ -76,20 +77,34 @@ export function QuizView({ onBack }: { onBack: () => void }) {
     <motion.div 
       initial={{ opacity: 0 }}
       animate={{ opacity: 1 }}
-      className="space-y-8 pt-8"
+      className="space-y-8 pt-4"
     >
       <div className="flex items-center justify-between">
-        <span className="text-sm font-bold text-orange-800/40 uppercase tracking-widest">Question {currentQuestion + 1}/10</span>
-        <div className="flex gap-1">
-          {Array.from({ length: 10 }).map((_, i) => (
-            <div 
-              key={i} 
-              className={cn(
-                "w-2 h-2 rounded-full",
-                i < currentQuestion ? "bg-green-500" : i === currentQuestion ? "bg-orange-500" : "bg-orange-100"
-              )} 
-            />
-          ))}
+        <button 
+          onClick={onBack}
+          className="p-2 hover:bg-orange-100 rounded-full text-orange-900 transition-colors"
+        >
+          <ChevronLeft size={24} />
+        </button>
+        
+        <div className="flex flex-col items-center">
+          <span className="text-xs font-bold text-orange-800/40 uppercase tracking-widest">Alphabet Quiz {currentQuestion + 1}/10</span>
+          <div className="flex gap-1 mt-1">
+            {Array.from({ length: 10 }).map((_, i) => (
+              <div 
+                key={i} 
+                className={cn(
+                  "w-2 h-2 rounded-full",
+                  i < currentQuestion ? "bg-green-500" : i === currentQuestion ? "bg-orange-500" : "bg-orange-100"
+                )} 
+              />
+            ))}
+          </div>
+        </div>
+
+        <div className="flex items-center gap-1 bg-orange-100 px-3 py-1 rounded-full text-orange-700 font-bold">
+          <Star size={16} className="fill-orange-500 text-orange-500" />
+          <span>{score}</span>
         </div>
       </div>
 

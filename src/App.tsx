@@ -18,6 +18,8 @@ import { LandingView } from './components/LandingView';
 import { HomeView } from './components/HomeView';
 import { AlphabetView } from './components/AlphabetView';
 import { QuizView } from './components/QuizView';
+import { GamesView } from './components/GamesView';
+import { ImageQuizView } from './components/ImageQuizView';
 import { CharacterModal } from './components/CharacterModal';
 
 export default function App() {
@@ -100,7 +102,7 @@ export default function App() {
             />
           ) : (
             <AnimatePresence mode="wait">
-              {view === 'home' && <HomeView key="home" onStart={() => setView('alphabet')} onQuiz={() => setView('quiz')} />}
+              {view === 'home' && <HomeView key="home" onStart={() => setView('alphabet')} onQuiz={() => setView('games')} />}
               {view === 'alphabet' && (
                 <AlphabetView 
                   key="alphabet"
@@ -108,7 +110,15 @@ export default function App() {
                   onSelect={setSelectedChar} 
                 />
               )}
-              {view === 'quiz' && <QuizView key="quiz" onBack={() => setView('home')} />}
+              {view === 'games' && (
+                <GamesView 
+                  key="games"
+                  onStartQuiz={() => setView('quiz')}
+                  onStartImageQuiz={() => setView('imageQuiz')}
+                />
+              )}
+              {view === 'quiz' && <QuizView key="quiz" onBack={() => setView('games')} />}
+              {view === 'imageQuiz' && <ImageQuizView key="imageQuiz" onBack={() => setView('games')} />}
             </AnimatePresence>
           )}
         </main>
@@ -139,8 +149,8 @@ export default function App() {
               label="Learn" 
             />
             <NavButton 
-              active={view === 'quiz'} 
-              onClick={() => setView('quiz')} 
+              active={view === 'games' || view === 'quiz' || view === 'imageQuiz'} 
+              onClick={() => setView('games')} 
               icon={<Gamepad2 size={20} />} 
               label="Play" 
             />

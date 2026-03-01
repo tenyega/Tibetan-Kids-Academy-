@@ -10,4 +10,4 @@ export interface TibetanCharacter {
   imagePath?: string;
 }
 
-export type AppState = 'landing' | 'home' | 'alphabet' | 'vocabulary' | 'quiz';
+export type AppState = 'landing' | 'home' | 'alphabet' | 'vocabulary' | 'quiz' | 'games' | 'imageQuiz';
