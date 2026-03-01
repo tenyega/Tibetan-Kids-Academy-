@@ -21,6 +21,7 @@ import { QuizView } from './components/QuizView';
 import { GamesView } from './components/GamesView';
 import { ImageQuizView } from './components/ImageQuizView';
 import { ColoringView } from './components/ColoringView';
+import { MatchingView } from './components/MatchingView';
 import { CharacterModal } from './components/CharacterModal';
 
 export default function App() {
@@ -117,11 +118,13 @@ export default function App() {
                   onStartQuiz={() => setView('quiz')}
                   onStartImageQuiz={() => setView('imageQuiz')}
                   onStartColoring={() => setView('coloring')}
+                  onStartMatching={() => setView('matching')}
                 />
               )}
               {view === 'quiz' && <QuizView key="quiz" onBack={() => setView('games')} />}
               {view === 'imageQuiz' && <ImageQuizView key="imageQuiz" onBack={() => setView('games')} />}
               {view === 'coloring' && <ColoringView key="coloring" onBack={() => setView('games')} />}
+              {view === 'matching' && <MatchingView key="matching" onBack={() => setView('games')} />}
             </AnimatePresence>
           )}
         </main>
@@ -152,7 +155,7 @@ export default function App() {
               label="Learn" 
             />
             <NavButton 
-              active={view === 'games' || view === 'quiz' || view === 'imageQuiz' || view === 'coloring'} 
+              active={view === 'games' || view === 'quiz' || view === 'imageQuiz' || view === 'coloring' || view === 'matching'} 
               onClick={() => setView('games')} 
               icon={<Gamepad2 size={20} />} 
               label="Play" 

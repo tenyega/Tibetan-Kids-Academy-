@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion } from 'motion/react';
-import { Gamepad2, Image as ImageIcon, BookOpen, Palette } from 'lucide-react';
+import { Gamepad2, Image as ImageIcon, BookOpen, Palette, Link as LinkIcon } from 'lucide-react';
 import { cn } from './Common';
 
 interface GameCardProps {
@@ -37,11 +37,13 @@ function GameCard({ title, description, icon, color, onClick }: GameCardProps) {
 export function GamesView({ 
   onStartQuiz, 
   onStartImageQuiz,
-  onStartColoring 
+  onStartColoring,
+  onStartMatching
 }: { 
   onStartQuiz: () => void; 
   onStartImageQuiz: () => void;
   onStartColoring: () => void;
+  onStartMatching: () => void;
 }) {
   return (
     <motion.div 
@@ -78,6 +80,14 @@ export function GamesView({
           icon={<Palette size={32} />}
           color="bg-purple-500 shadow-purple-200"
           onClick={onStartColoring}
+        />
+
+        <GameCard 
+          title="Matching Fun"
+          description="Link the images with their Tibetan words"
+          icon={<LinkIcon size={32} />}
+          color="bg-indigo-500 shadow-indigo-200"
+          onClick={onStartMatching}
         />
       </div>
 
