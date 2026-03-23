@@ -23,6 +23,7 @@ import { ImageQuizView } from './components/ImageQuizView';
 import { ColoringView } from './components/ColoringView';
 import { MatchingView } from './components/MatchingView';
 import { NumbersView } from './components/NumbersView';
+import { MathBalloonGame } from './components/MathBalloonGame';
 import { CharacterModal } from './components/CharacterModal';
 
 export default function App() {
@@ -120,12 +121,14 @@ export default function App() {
                   onStartImageQuiz={() => setView('imageQuiz')}
                   onStartColoring={() => setView('coloring')}
                   onStartMatching={() => setView('matching')}
+                  onStartMathBalloon={() => setView('mathBalloon')}
                 />
               )}
               {view === 'quiz' && <QuizView key="quiz" onBack={() => setView('games')} />}
               {view === 'imageQuiz' && <ImageQuizView key="imageQuiz" onBack={() => setView('games')} />}
               {view === 'coloring' && <ColoringView key="coloring" onBack={() => setView('games')} />}
               {view === 'matching' && <MatchingView key="matching" onBack={() => setView('games')} />}
+              {view === 'mathBalloon' && <MathBalloonGame key="mathBalloon" onBack={() => setView('games')} />}
               {view === 'numbers' && <NumbersView key="numbers" onBack={() => setView('home')} />}
             </AnimatePresence>
           )}

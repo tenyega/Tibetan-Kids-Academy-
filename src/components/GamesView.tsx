@@ -38,12 +38,14 @@ export function GamesView({
   onStartQuiz, 
   onStartImageQuiz,
   onStartColoring,
-  onStartMatching
+  onStartMatching,
+  onStartMathBalloon
 }: { 
   onStartQuiz: () => void; 
   onStartImageQuiz: () => void;
   onStartColoring: () => void;
   onStartMatching: () => void;
+  onStartMathBalloon: () => void;
 }) {
   return (
     <motion.div 
@@ -88,6 +90,14 @@ export function GamesView({
           icon={<LinkIcon size={32} />}
           color="bg-indigo-500 shadow-indigo-200"
           onClick={onStartMatching}
+        />
+
+        <GameCard 
+          title="Math Balloon"
+          description="Pop the right balloon for Tibetan math!"
+          icon={<Gamepad2 size={32} />}
+          color="bg-emerald-500 shadow-emerald-200"
+          onClick={onStartMathBalloon}
         />
       </div>
 

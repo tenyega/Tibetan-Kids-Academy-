@@ -17,4 +17,4 @@ export interface TibetanNumber {
   value: number;
 }
 
-export type AppState = 'landing' | 'home' | 'alphabet' | 'vocabulary' | 'quiz' | 'games' | 'imageQuiz' | 'coloring' | 'matching' | 'numbers';
+export type AppState = 'landing' | 'home' | 'alphabet' | 'vocabulary' | 'quiz' | 'games' | 'imageQuiz' | 'coloring' | 'matching' | 'numbers' | 'mathBalloon';
