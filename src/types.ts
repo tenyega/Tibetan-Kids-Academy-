@@ -10,4 +10,11 @@ export interface TibetanCharacter {
   imagePath?: string;
 }
 
-export type AppState = 'landing' | 'home' | 'alphabet' | 'vocabulary' | 'quiz' | 'games' | 'imageQuiz' | 'coloring' | 'matching';
+export interface TibetanNumber {
+  digit: string;
+  tibetan: string;
+  transliteration: string;
+  value: number;
+}
+
+export type AppState = 'landing' | 'home' | 'alphabet' | 'vocabulary' | 'quiz' | 'games' | 'imageQuiz' | 'coloring' | 'matching' | 'numbers';
